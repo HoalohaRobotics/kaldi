@@ -26,6 +26,7 @@
 #include "decoder\decoder-wrappers.h"
 #include "nnet3\nnet-am-decodable-simple.h"
 #include "online2/online-ivector-feature.h"
+#include "NNet3LatgenFaster.h"
 
 
 using namespace kaldi;
@@ -33,7 +34,6 @@ using namespace kaldi;
 int ComputeMFCCFeats(MfccOptions mfcc_opts, std::string wav_file_path, Matrix<BaseFloat>* pfeats);
 int ComputeCMVNStats(Matrix<BaseFloat>& feats, Matrix<double>* pstats);
 int IVectorExtractorOnline2(Matrix<BaseFloat>& feats, OnlineIvectorExtractionConfig ivector_config, Matrix<BaseFloat>* pivectors);
-int NNet3LatgenFaster(Matrix<BaseFloat> &feats, Matrix<BaseFloat> &ivectors, LatticeFasterDecoderConfig config, nnet3::NnetSimpleComputationOptions decodable_opts, std::string& transcription, Lattice* plattice, double& likelihood);
 //int LatticeScale(Lattice* lattice);
 //int Lattice1Best(int argc, char* argv[]);
 //int LatticeAlignWords(int argc, char* argv[]);
@@ -48,42 +48,19 @@ int main(int argc, char* argv[]) {
         wav_file_path += " ";
     }
 
-    // Compute Mel Frequency Cepstral Coefficients Features
+    // Read Configs
     MfccOptions mfcc_opts;
     const char* mfcc_config_file = "conf/mfcc_hires.conf";
     ParseOptions po("");
     mfcc_opts.Register(&po);
     po.ReadConfigFile(mfcc_config_file);
     
-    Matrix<BaseFloat> feats;
-    if(ComputeMFCCFeats(mfcc_opts, wav_file_path, &feats) != 0) {
-        std::cout << "Failed to compute MFCC Features.";
-        return -1;
-    }
-    
-    // Compute cepstral mean and variance normalization statistics
-    // Cepstral mean and variance normalization (CMVN) is a computationally efficient normalization technique for robust speech recognition.
-    // I think this is optional but might improve decoding (see decoder options).
-    //Matrix<double> stats;
-    //if (ComputeCMVNStats(feats, &stats) != 0) {
-    //    std::cout << "Failed to compute CMVN Stats";
-    //    return -1;
-    //}
-
-    // Extract ivectors
     OnlineIvectorExtractionConfig extractor_opts;
     const char* extractor_config_file = "conf/ivector_extractor.conf";
     ParseOptions po2("");
     extractor_opts.Register(&po2);
     po2.ReadConfigFile(extractor_config_file);
 
-    Matrix<float> iVectors;
-    if (IVectorExtractorOnline2(feats, extractor_opts, &iVectors) != 0) {
-        std::cout << "Failed to extract iVectors";
-        return -1;
-    }
-
-    // Decode using nnet3-latgen-faster
     LatticeFasterDecoderConfig decoder_config;
     nnet3::NnetSimpleComputationOptions nnet3_simple_computation_opts;
     const char* decoder_config_file = "conf/lattice_faster_decoder.conf";
@@ -97,16 +74,59 @@ int main(int argc, char* argv[]) {
     Lattice lattice;
     std::string transcription = "";
     double likelihood = 0;
-    if (NNet3LatgenFaster(feats, iVectors, decoder_config, nnet3_simple_computation_opts, transcription, &lattice, likelihood) != 0)
-    {
-        std::cout << "Failed to Generate Lattice (Decode)";
-        return -1;
-    }
-    std::cout << transcription + '\n';
+    Matrix<BaseFloat> feats;
+    Matrix<float> iVectors;
+    //Matrix<double> stats;
 
-    std::ofstream out("transcription.txt");
-    out << transcription;
-    out.close();
+    std::string word_syms_filename = "exp/chain_cleaned/tdnn_1d_sp/graph_tgsmall/words.txt";
+    std::string model_filename = "exp/chain_cleaned/tdnn_1d_sp/final.mdl";
+    std::string decode_graph_filename = "exp/chain_cleaned/tdnn_1d_sp/graph_tgsmall/HCLG.fst";
+    
+    ModelAndDecoder m;
+    LoadModelAndDecoder(
+        m, 
+        decode_graph_filename, 
+        model_filename, 
+        word_syms_filename, 
+        nnet3_simple_computation_opts, 
+        decoder_config);
+
+
+    while (true)
+    {
+        transcription = "";
+        std::cout << "Wav File Path: ";
+
+        std::getline(std::cin >> std::ws, wav_file_path);
+        wav_file_path.erase(remove(wav_file_path.begin(), wav_file_path.end(), '\"'), wav_file_path.end());
+
+        if (ComputeMFCCFeats(mfcc_opts, wav_file_path, &feats) != 0) {
+            std::cout << "Failed to compute MFCC Features.\n";
+            continue;
+        }
+
+        //if (ComputeCMVNStats(feats, &stats) != 0) {
+        //    std::cout << "Failed to compute CMVN Stats\n";
+        //    continue;
+        //}
+
+        if (IVectorExtractorOnline2(feats, extractor_opts, &iVectors) != 0) {
+            std::cout << "Failed to extract iVectors\n";
+            continue;
+        }
+
+        if (NNet3LatgenFaster(m, feats, iVectors, transcription, &lattice, likelihood) != 0)
+        {
+            std::cout << "Failed to Generate Lattice (Decode)\n";
+            continue;
+        }
+        std::cout << transcription + '\n';
+
+        std::ofstream out("transcription.txt");
+        out << transcription;
+        out.close();
+    }
+    
     return 0;
 
     //// lattice scale (is this already done in NNet3LatgenFaster?)
