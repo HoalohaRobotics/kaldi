@@ -14,35 +14,32 @@ using namespace kaldi;
 using namespace kaldi::nnet3; 
 using namespace fst;
 
-// Callers of this are responsible for calling UnloadModelAndDecoder to prevent memory leak.
 int LoadModelAndDecoder(
-    ModelAndDecoder& m,
+    ModelAndDecoder* m,
     string decoder_graph_filename, 
     string model_filename, 
     string word_syms_filename, 
     nnet3::NnetSimpleComputationOptions decodable_opts,
-    LatticeFasterDecoderConfig config) 
+    LatticeFasterDecoderConfig decoder_config) 
 {
     bool binary;
     Input ki(model_filename, &binary);
-    m.trans_model.Read(ki.Stream(), binary);
-    m.am_nnet.Read(ki.Stream(), binary);
-    SetBatchnormTestMode(true, &(m.am_nnet.GetNnet()));
-    SetDropoutTestMode(true, &(m.am_nnet.GetNnet()));
-    CollapseModel(CollapseModelConfig(), &(m.am_nnet.GetNnet()));
+    m->trans_model.Read(ki.Stream(), binary);
+    m->am_nnet.Read(ki.Stream(), binary);
+    SetBatchnormTestMode(true, &(m->am_nnet.GetNnet()));
+    SetDropoutTestMode(true, &(m->am_nnet.GetNnet()));
+    CollapseModel(CollapseModelConfig(), &(m->am_nnet.GetNnet()));
 
-    m.decodable_opts = decodable_opts;
-    m.config = config;
+    m->decodable_opts = decodable_opts;
+    m->decoder_config = decoder_config;
 
-    CachingOptimizingCompiler compiler(m.am_nnet.GetNnet(),
+    CachingOptimizingCompiler compiler(m->am_nnet.GetNnet(),
         decodable_opts.optimize_config);
 
-    m.decode_fst = fst::ReadFstKaldiGeneric(decoder_graph_filename);
+    m->decode_fst = fst::ReadFstKaldiGeneric(decoder_graph_filename);
+    m->decoder = new LatticeFasterDecoder(*m->decode_fst, m->decoder_config);
 
-    //LatticeFasterDecoder decoder(decode_fst, config);
-    m.decoder = new LatticeFasterDecoder(*m.decode_fst, m.config);
-
-    m.word_syms = fst::SymbolTable::ReadText(word_syms_filename);
+    m->word_syms = fst::SymbolTable::ReadText(word_syms_filename);
 
     return 0;
 }
@@ -55,26 +52,7 @@ void UnloadModelAndDecoder(ModelAndDecoder* pModelAndDecoder)
 }
 
 int NNet3LatgenFaster(
-    string& decode_graph_filename,
-    string& model_filename,
-    string& word_syms_filename,
-    Matrix<BaseFloat>& feats,
-    Matrix<BaseFloat>& ivectors,
-    LatticeFasterDecoderConfig config,
-    nnet3::NnetSimpleComputationOptions decodable_opts,
-    std::string& transcription,
-    Lattice* plattice,
-    double& likelihood)
-{
-    ModelAndDecoder m;
-    LoadModelAndDecoder(m, decode_graph_filename, model_filename, word_syms_filename, decodable_opts, config);
-    NNet3LatgenFaster(m, feats, ivectors, transcription, plattice, likelihood);
-
-    return 0;
-}
-
-int NNet3LatgenFaster(
-    ModelAndDecoder& modelAndDecoder,
+    ModelAndDecoder* m,
     Matrix<BaseFloat>& feats,
     Matrix<BaseFloat>& ivectors,
     std::string& transcription,
@@ -94,15 +72,15 @@ int NNet3LatgenFaster(
         kaldi::int64 frame_count = 0;
 
         DecodableAmNnetSimple nnet_decodable(
-            modelAndDecoder.decodable_opts, modelAndDecoder.trans_model, modelAndDecoder.am_nnet,
+            m->decodable_opts, m->trans_model, m->am_nnet,
             feats, NULL, &ivectors, online_ivector_period);
 
         bool determinize = false;
         Lattice lattice;
-        Decode(*modelAndDecoder.decoder, nnet_decodable, modelAndDecoder.trans_model, modelAndDecoder.word_syms, modelAndDecoder.decodable_opts.acoustic_scale, determinize, allow_partial, transcription, &lattice, likelihood);
+        Decode(*m->decoder, nnet_decodable, m->trans_model, m->word_syms, m->decodable_opts.acoustic_scale, determinize, allow_partial, transcription, &lattice, likelihood);
 
         kaldi::int64 input_frame_count =
-            frame_count * modelAndDecoder.decodable_opts.frame_subsampling_factor;
+            frame_count * m->decodable_opts.frame_subsampling_factor;
 
         double elapsed = timer.Elapsed();
         KALDI_LOG << "Time taken " << elapsed

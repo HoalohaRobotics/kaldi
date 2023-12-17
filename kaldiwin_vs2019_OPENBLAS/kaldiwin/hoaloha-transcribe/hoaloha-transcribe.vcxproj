@@ -160,7 +160,7 @@
     <ClCompile Include="DecodeFaster.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="hoaloha-transcribe.cc" />
+    <ClCompile Include="demo_app.cc" />
     <ClCompile Include="IVectorExtractorOnline2.cc" />
     <ClCompile Include="Lattice1Best.cpp" />
     <ClCompile Include="LatticeAlignWords.cc" />
@@ -223,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NNet3LatgenFaster.h" />
+    <ClInclude Include="transcribe.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
