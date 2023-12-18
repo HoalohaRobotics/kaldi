@@ -104,6 +104,7 @@ kaldiwin_vs2019_OPENBLAS/*
 !kaldiwin_vs2019_OPENBLAS/kaldiwin/
 kaldiwin_vs2019_OPENBLAS/kaldiwin/*
 !kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/
+!kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dll/
 
 #/kaldiwin_vs2019_OPENBLAS/*
 #!/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/*
@@ -111,3 +112,9 @@ kaldiwin_vs2019_OPENBLAS/kaldiwin/*
 *.filters
 *.user
 /egs/hoaloha/s5/exp
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/x64/Release/hoaloha-.DB98DBAC.tlog
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/x64/Release/hoaloha-transcribe.log
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/x64/Release/hoaloha-transcribe.ipdb
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/x64/Release/hoaloha-transcribe.iobj
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/x64/Release/hoaloha-transcribe.exe.recipe
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dll/x64/Debug

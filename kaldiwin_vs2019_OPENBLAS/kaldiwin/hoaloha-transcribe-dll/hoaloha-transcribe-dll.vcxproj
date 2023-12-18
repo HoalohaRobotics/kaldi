@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DB98DBAC-4789-4F75-8C14-D709AF3FA55F}</ProjectGuid>
+    <ProjectGuid>{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>computemfccfeats</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
@@ -39,13 +39,13 @@
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -156,20 +156,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ComputeCMVNStats.cc" />
-    <ClCompile Include="ComputeMFCCFeats.cc" />
-    <ClCompile Include="DecodeFaster.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="demo_app.cc" />
-    <ClCompile Include="IVectorExtractorOnline2.cc" />
-    <ClCompile Include="Lattice1Best.cpp" />
-    <ClCompile Include="LatticeAlignWords.cc" />
-    <ClCompile Include="LatticeScale.cpp" />
-    <ClCompile Include="NBestToCTM.cc" />
-    <ClCompile Include="NNet3LatgenFaster.cc" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\kaldi-base\kaldi-base.vcxproj">
       <Project>{7b8eb7dc-981b-4bcc-a749-71af95add7dc}</Project>
     </ProjectReference>
@@ -223,8 +209,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NNet3LatgenFaster.h" />
-    <ClInclude Include="transcribe.h" />
+    <ClCompile Include="..\hoaloha-transcribe\ComputeMFCCFeats.cc" />
+    <ClCompile Include="..\hoaloha-transcribe\IVectorExtractorOnline2.cc" />
+    <ClCompile Include="..\hoaloha-transcribe\Lattice1Best.cpp" />
+    <ClCompile Include="..\hoaloha-transcribe\LatticeAlignWords.cc" />
+    <ClCompile Include="..\hoaloha-transcribe\LatticeScale.cpp" />
+    <ClCompile Include="..\hoaloha-transcribe\NBestToCTM.cc" />
+    <ClCompile Include="..\hoaloha-transcribe\NNet3LatgenFaster.cc" />
+    <ClCompile Include="transcribe-dll.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\hoaloha-transcribe\DecodeFaster.h" />
+    <ClInclude Include="..\hoaloha-transcribe\NNet3LatgenFaster.h" />
+    <ClInclude Include="..\hoaloha-transcribe\transcribe.h" />
+    <ClInclude Include="transcribe-dll.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

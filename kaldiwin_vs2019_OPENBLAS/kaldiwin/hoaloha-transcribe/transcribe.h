@@ -28,7 +28,9 @@
 namespace hoaloha
 {
     int Init(ModelAndDecoder* m);
-    int Transcribe(ModelAndDecoder* m, string wav_file_path, string& transcription, Lattice* lattice, double& likelihood);
+    int TranscribeFile(ModelAndDecoder* m, string wav_file_path, string& transcription, Lattice* lattice, double& likelihood);
+    int TranscribeWavData(ModelAndDecoder* m, WaveData& waveData, string& transcription, Lattice* lattice, double& likelihood);
+    int TranscribeFeats(ModelAndDecoder* m, Matrix<BaseFloat>& feats, string& transcription, Lattice* lattice, double& likelihood);
     void Cleanup(ModelAndDecoder* m);
 
     int Init(ModelAndDecoder* m) {
@@ -64,72 +66,49 @@ namespace hoaloha
             m->decoder_config);
     }
 
-    int Transcribe(ModelAndDecoder* m, string wav_file_path, string& transcription, Lattice* lattice, double& likelihood)
+    int TranscribeFile(ModelAndDecoder* m, string wav_file_path, string& transcription, Lattice* lattice, double& likelihood)
     {
-        kaldi::Timer timer1;
-        kaldi::Timer timer2;
+        Timer timer;
         Matrix<BaseFloat> feats;
-        Matrix<float> iVectors;
-        //Matrix<double> stats;
-
-
-        timer1.Reset();
-        timer2.Reset();
 
         if (ComputeMFCCFeatsFromFile(m->mfcc_opts, wav_file_path, &feats) != 0) {
             std::cout << "Failed to compute MFCC Features.\n";
             return(-1);
         }
-        std::cout << "HOALOHA: MFCC time: " << timer1.Elapsed() << "\n";
-        timer1.Reset();
+        int ret = TranscribeFeats(m, feats, transcription, lattice, likelihood);
+        std::cout << "HOALOHA: transcibe time: " << timer.Elapsed() << "\n";
+        return ret;
+    }
 
-        //if (ComputeCMVNStats(feats, &stats) != 0) {
-        //    std::cout << "Failed to compute CMVN Stats\n";
-        //    continue;
-        //}
+    int TranscribeWavData(ModelAndDecoder* m, WaveData& waveData, string& transcription, Lattice* lattice, double& likelihood)
+    {
+        Timer timer;
+        Matrix<BaseFloat> feats;
+
+        if (ComputeMFCCFeatsFromWavData(m->mfcc_opts, waveData, &feats) != 0) {
+            std::cout << "Failed to compute MFCC Features.\n";
+            return(-1);
+        }
+
+        int ret = TranscribeFeats(m, feats, transcription, lattice, likelihood);
+        std::cout << "HOALOHA: transcribe time: " << timer.Elapsed() << "\n";
+        return ret;
+    }
+
+    int TranscribeFeats(ModelAndDecoder* m, Matrix<BaseFloat>& feats, string& transcription, Lattice* lattice, double& likelihood)
+    {
+        Matrix<float> iVectors;
 
         if (IVectorExtractorOnline2(feats, m->extractor_opts, &iVectors) != 0) {
             std::cout << "Failed to extract iVectors\n";
             return(-1);
         }
-        std::cout << "HOALOHA: IVector time: " << timer1.Elapsed() << "\n";
-        timer1.Reset();
 
         if (NNet3LatgenFaster(m, feats, iVectors, transcription, lattice, likelihood) != 0)
         {
             std::cout << "Failed to Generate Lattice (Decode)\n";
             return(-1);
         }
-        std::cout << "HOALOHA: Decode time: " << timer1.Elapsed() << "\n";
-        timer1.Reset();
-
-        std::cout << "HOALOHA: Total time: " << timer2.Elapsed() << "\n";
-        timer2.Reset();
-
-        //// lattice scale (is this already done in NNet3LatgenFaster?)
-        //if (LatticeScale(&lattice) != 0) {
-        //    std::cout << "Failed to Scale Lattice";
-        //    return -1;
-        //}
-
-        ////lattice-1best (is this already done in NNet3LatgenFaster?)
-        //if (Lattice1Best(0, NULL) != 0) {
-        //    std::cout << "Failed to Find Lattice1Best";
-        //    return -1;
-        //}
-
-        ////lattice-align-words (is this already done in NNet3LatgenFaster?)
-        //if (LatticeAlignWords(0, NULL) != 0) {
-        //    std::cout << "Failed to Lattice Align Words";
-        //    return -1;
-        //}
-
-        ////nbest-to-ctm (Need timing info?)
-        //if (NBestToCTM(0, NULL) != 0) {
-        //    std::cout << "Failed to Convert Best to CTM";
-        //    return -1;
-        //}
-
         return 0;
     }
 

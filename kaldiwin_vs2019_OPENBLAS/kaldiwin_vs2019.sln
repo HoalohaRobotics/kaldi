@@ -1306,6 +1306,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "word-align-lattice-lexicon-
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hoaloha-transcribe", "kaldiwin\hoaloha-transcribe\hoaloha-transcribe.vcxproj", "{DB98DBAC-4789-4F75-8C14-D709AF3FA55F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hoaloha-transcribe-dll", "kaldiwin\hoaloha-transcribe-dll\hoaloha-transcribe-dll.vcxproj", "{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -6530,6 +6532,14 @@ Global
 		{DB98DBAC-4789-4F75-8C14-D709AF3FA55F}.Release|Win32.Build.0 = Release|Win32
 		{DB98DBAC-4789-4F75-8C14-D709AF3FA55F}.Release|x64.ActiveCfg = Release|x64
 		{DB98DBAC-4789-4F75-8C14-D709AF3FA55F}.Release|x64.Build.0 = Release|x64
+		{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}.Debug|Win32.Build.0 = Debug|Win32
+		{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}.Debug|x64.ActiveCfg = Debug|x64
+		{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}.Debug|x64.Build.0 = Debug|x64
+		{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}.Release|Win32.ActiveCfg = Release|Win32
+		{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}.Release|Win32.Build.0 = Release|Win32
+		{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}.Release|x64.ActiveCfg = Release|x64
+		{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

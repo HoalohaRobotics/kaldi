@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
         {
             break;
         }
-        hoaloha::Transcribe(&m, wav_file_path, transcription, &lattice, likelihood);
+        hoaloha::TranscribeFile(&m, wav_file_path, transcription, &lattice, likelihood);
         std::cout << transcription + '\n';
     }
 
