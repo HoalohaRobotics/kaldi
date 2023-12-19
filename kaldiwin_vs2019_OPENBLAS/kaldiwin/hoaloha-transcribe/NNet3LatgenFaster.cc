@@ -44,11 +44,11 @@ int LoadModelAndDecoder(
     return 0;
 }
 
-void UnloadModelAndDecoder(ModelAndDecoder* pModelAndDecoder)
+void UnloadModelAndDecoder(ModelAndDecoder* m)
 {
-    delete pModelAndDecoder->decoder;
-    delete pModelAndDecoder->decode_fst;
-    delete pModelAndDecoder->word_syms;
+    delete m->decoder;
+    delete m->decode_fst;
+    delete m->word_syms;
 }
 
 int NNet3LatgenFaster(

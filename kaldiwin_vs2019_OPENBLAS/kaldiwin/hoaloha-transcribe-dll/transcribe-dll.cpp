@@ -10,11 +10,14 @@ namespace hoalohadll
 		return (intptr_t)model;
 	}
 
-	int Transcribe(intptr_t model, CHAR* wav_file_path, CHAR* transcription, intptr_t lattice, double& likelihood)
+	int Transcribe(intptr_t model, CHAR* wav_file_path, LPEXTFUNCWRITE write, intptr_t lattice, double& likelihood)
 	{
-		std::string w(wav_file_path);
-		std::string t(transcription);
-		return hoaloha::TranscribeFile((ModelAndDecoder*) model, w, t, (Lattice*)lattice, likelihood);
+		std::string wav_path = wav_file_path;
+		std::string transcription;
+		int ret= hoaloha::TranscribeFile((ModelAndDecoder*) model, wav_path, transcription, (Lattice*)lattice, likelihood);
+		write(transcription.c_str());
+		return ret;
+
 	}
 
 	void Cleanup(intptr_t model)
