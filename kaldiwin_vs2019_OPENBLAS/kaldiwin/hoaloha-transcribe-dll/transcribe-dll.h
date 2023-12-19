@@ -11,7 +11,7 @@
 #endif
 namespace hoalohadll
 {
-	extern "C" HOALOHA_TRANSCRIBE_API int Init(ModelAndDecoder * m);
-	extern "C" HOALOHA_TRANSCRIBE_API int Transcribe(ModelAndDecoder * m, std::string wav_file_path, std::string & transcription, Lattice * lattice, double& likelihood);
-	extern "C" HOALOHA_TRANSCRIBE_API void Cleanup(ModelAndDecoder * m);
+	extern "C" HOALOHA_TRANSCRIBE_API intptr_t Init();
+	extern "C" HOALOHA_TRANSCRIBE_API int Transcribe(intptr_t model, CHAR * wav_file_path, CHAR * transcription, intptr_t lattice, double& likelihood);
+	extern "C" HOALOHA_TRANSCRIBE_API void Cleanup(intptr_t model);
 }

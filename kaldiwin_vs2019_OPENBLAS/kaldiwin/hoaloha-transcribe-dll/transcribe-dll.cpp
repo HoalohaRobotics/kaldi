@@ -1,19 +1,25 @@
 #include "transcribe-dll.h"
+#include <cstdint>
 
 namespace hoalohadll
 {
-	int Init(ModelAndDecoder* m)
+	intptr_t Init()
 	{
-		return hoaloha::Init(m);
+		ModelAndDecoder* model = new ModelAndDecoder();
+		hoaloha::Init(model);
+		return (intptr_t)model;
 	}
 
-	int Transcribe(ModelAndDecoder* m, std::string wav_file_path, std::string& transcription, Lattice* lattice, double& likelihood)
+	int Transcribe(intptr_t model, CHAR* wav_file_path, CHAR* transcription, intptr_t lattice, double& likelihood)
 	{
-		return hoaloha::TranscribeFile(m, wav_file_path, transcription, lattice, likelihood);
+		std::string w(wav_file_path);
+		std::string t(transcription);
+		return hoaloha::TranscribeFile((ModelAndDecoder*) model, w, t, (Lattice*)lattice, likelihood);
 	}
 
-	void Cleanup(ModelAndDecoder* m)
+	void Cleanup(intptr_t model)
 	{
-		hoaloha::Cleanup(m);
+		hoaloha::Cleanup((ModelAndDecoder*)model);
+		delete (ModelAndDecoder*)model;
 	}
 }
