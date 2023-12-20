@@ -1308,7 +1308,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hoaloha-transcribe", "kaldi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hoaloha-transcribe-dll", "kaldiwin\hoaloha-transcribe-dll\hoaloha-transcribe-dll.vcxproj", "{AA7C96E0-54B4-4600-B3F5-66D63D8F6E16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoaloha-transcribe-dotnet", "hoaloha-transcribe-dotnet\hoaloha-transcribe-dotnet.csproj", "{4806C55A-A90E-46E9-BDD4-9DC89C1F0B5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoaloha-transcribe-dotnet", "kaldiwin\hoaloha-transcribe-dotnet\hoaloha-transcribe-dotnet.csproj", "{4806C55A-A90E-46E9-BDD4-9DC89C1F0B5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
