@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[]) {
     ModelAndDecoder m;
-    hoaloha::Init(&m);
+    hoaloha::Init(&m, "C:\\Users\\Gersh\\Git\\kaldi_hoaloha\\egs\\hoaloha\\s5");
 
     string transcription;
     Lattice lattice;

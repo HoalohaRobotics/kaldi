@@ -1310,6 +1310,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hoaloha-transcribe-dll", "k
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoaloha-transcribe-dotnet", "kaldiwin\hoaloha-transcribe-dotnet\hoaloha-transcribe-dotnet.csproj", "{4806C55A-A90E-46E9-BDD4-9DC89C1F0B5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hoaloha-transcribe-dotnet-lib", "kaldiwin\hoaloha-transcribe-dotnet-lib\hoaloha-transcribe-dotnet-lib.csproj", "{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -7862,6 +7864,18 @@ Global
 		{4806C55A-A90E-46E9-BDD4-9DC89C1F0B5C}.Release|Win32.Build.0 = Release|Any CPU
 		{4806C55A-A90E-46E9-BDD4-9DC89C1F0B5C}.Release|x64.ActiveCfg = Release|Any CPU
 		{4806C55A-A90E-46E9-BDD4-9DC89C1F0B5C}.Release|x64.Build.0 = Release|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Debug|Win32.Build.0 = Debug|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Debug|x64.Build.0 = Debug|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Release|Win32.ActiveCfg = Release|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Release|Win32.Build.0 = Release|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Release|x64.ActiveCfg = Release|Any CPU
+		{DEDC4AFA-44AB-4BE1-A68E-3B7193FDE634}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

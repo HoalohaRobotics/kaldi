@@ -12,7 +12,7 @@ typedef void(_stdcall* LPEXTFUNCWRITE) (LPCSTR s);
 
 namespace hoalohadll
 {
-	extern "C" HOALOHA_TRANSCRIBE_API intptr_t Init();
+	extern "C" HOALOHA_TRANSCRIBE_API intptr_t Init(CHAR * model_path);
 	extern "C" HOALOHA_TRANSCRIBE_API int Transcribe(intptr_t model, CHAR * wav_file_path, LPEXTFUNCWRITE transcription, intptr_t lattice, double& likelihood);
 	extern "C" HOALOHA_TRANSCRIBE_API void Cleanup(intptr_t model);
 }

@@ -105,6 +105,8 @@ kaldiwin_vs2019_OPENBLAS/*
 kaldiwin_vs2019_OPENBLAS/kaldiwin/*
 !kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/
 !kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dll/
+!kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dotnet-lib/
+!kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dotnet/
 
 #/kaldiwin_vs2019_OPENBLAS/*
 #!/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/*
@@ -119,3 +121,6 @@ kaldiwin_vs2019_OPENBLAS/kaldiwin/*
 /kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe/x64/Release/hoaloha-transcribe.exe.recipe
 /kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dll/x64/Debug
 /kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dll/x64/Release
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dotnet/bin
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dotnet/obj
+/kaldiwin_vs2019_OPENBLAS/kaldiwin/hoaloha-transcribe-dotnet-lib/obj/Release

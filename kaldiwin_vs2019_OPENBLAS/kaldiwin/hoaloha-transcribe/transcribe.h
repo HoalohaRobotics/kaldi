@@ -21,47 +21,72 @@
 
 // TODO: Figure out how to build the model(s) in windows (instead of copy from WSL)
 
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 
 #include "NNet3LatgenFaster.h"
 #include "base/timer.h"
+#include <iostream>
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem;
 
 namespace hoaloha
 {
-    int Init(ModelAndDecoder* m);
+    int Init(ModelAndDecoder* m, CHAR* model_path);
     int TranscribeFile(ModelAndDecoder* m, string wav_file_path, string& transcription, Lattice* lattice, double& likelihood);
     int TranscribeWavData(ModelAndDecoder* m, WaveData& waveData, string& transcription, Lattice* lattice, double& likelihood);
     int TranscribeFeats(ModelAndDecoder* m, Matrix<BaseFloat>& feats, string& transcription, Lattice* lattice, double& likelihood);
     void Cleanup(ModelAndDecoder* m);
 
-    int Init(ModelAndDecoder* m) {
+    int Init(ModelAndDecoder* m, CHAR* model_path) {
+        
         // Read Configs
-        const char* mfcc_config_file = "conf/mfcc_hires.conf";
-        const char* extractor_config_file = "conf/ivector_extractor.conf";
-        const char* decoder_config_file = "conf/lattice_faster_decoder.conf";
-        const char* nnet3_simple_computation_opts_file = "conf/nnet_simple_computation.conf";
+        std::cout << "HOALOHA: Loading Model From " << model_path << "\n";
+
+        fs::path root{ model_path };
+
+        fs::path mfcc_config_file = root / "conf/mfcc_hires.conf" ;
+        fs::path extractor_config_file = root / "conf/ivector_extractor.conf";
+        fs::path decoder_config_file = root / "conf/lattice_faster_decoder.conf";
+        fs::path nnet3_simple_computation_opts_file = root / "conf/nnet_simple_computation.conf";
+
         ParseOptions po("");
         m->mfcc_opts.Register(&po);
-        po.ReadConfigFile(mfcc_config_file);
+        po.ReadConfigFile(mfcc_config_file.string());
 
         ParseOptions po2("");
         m->extractor_opts.Register(&po2);
-        po2.ReadConfigFile(extractor_config_file);
+        po2.ReadConfigFile(extractor_config_file.string());
 
-         ParseOptions po3("");
+        //fix paths in this config to include root
+        fs::path fixed_path = root / m->extractor_opts.cmvn_config_rxfilename;
+        m->extractor_opts.cmvn_config_rxfilename = fixed_path.string();
+        fixed_path = root / m->extractor_opts.diag_ubm_rxfilename;
+        m->extractor_opts.diag_ubm_rxfilename = fixed_path.string();
+        fixed_path = root / m->extractor_opts.global_cmvn_stats_rxfilename;
+        m->extractor_opts.global_cmvn_stats_rxfilename = fixed_path.string();
+        fixed_path = root / m->extractor_opts.ivector_extractor_rxfilename;
+        m->extractor_opts.ivector_extractor_rxfilename = fixed_path.string();
+        fixed_path = root / m->extractor_opts.lda_mat_rxfilename;
+        m->extractor_opts.lda_mat_rxfilename = fixed_path.string();
+        fixed_path = root / m->extractor_opts.splice_config_rxfilename;
+        m->extractor_opts.splice_config_rxfilename = fixed_path.string();
+
+        ParseOptions po3("");
         m->decoder_config.Register(&po3);
         m->nnet3_simple_computation_opts.Register(&po3);
-        po3.ReadConfigFile(decoder_config_file);
-        po3.ReadConfigFile(nnet3_simple_computation_opts_file);
+        po3.ReadConfigFile(decoder_config_file.string());
+        po3.ReadConfigFile(nnet3_simple_computation_opts_file.string());
 
 
-        std::string word_syms_filename = "exp/chain_cleaned/tdnn_1d_sp/graph_tgsmall/words.txt";
-        std::string model_filename = "exp/chain_cleaned/tdnn_1d_sp/final.mdl";
-        std::string decode_graph_filename = "exp/chain_cleaned/tdnn_1d_sp/graph_tgsmall/HCLG.fst";
+        fs::path word_syms_filename = root / "exp/chain_cleaned/tdnn_1d_sp/graph_tgsmall/words.txt";
+        fs::path model_filename = root / "exp/chain_cleaned/tdnn_1d_sp/final.mdl";
+        fs::path decode_graph_filename = root / "exp/chain_cleaned/tdnn_1d_sp/graph_tgsmall/HCLG.fst";
         return LoadModelAndDecoder(
             m,
-            decode_graph_filename,
-            model_filename,
-            word_syms_filename,
+            decode_graph_filename.string(),
+            model_filename.string(),
+            word_syms_filename.string(),
             m->nnet3_simple_computation_opts,
             m->decoder_config);
     }

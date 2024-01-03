@@ -3,10 +3,10 @@
 
 namespace hoalohadll
 {
-	intptr_t Init()
+	intptr_t Init(CHAR * model_path)
 	{
 		ModelAndDecoder* model = new ModelAndDecoder();
-		hoaloha::Init(model);
+		hoaloha::Init(model, model_path);
 		return (intptr_t)model;
 	}
 
