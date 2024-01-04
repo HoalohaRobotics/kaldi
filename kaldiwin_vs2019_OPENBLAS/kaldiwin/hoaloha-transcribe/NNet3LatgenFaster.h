@@ -37,5 +37,6 @@ void UnloadModelAndDecoder(ModelAndDecoder* m);
 int NNet3LatgenFaster(ModelAndDecoder* m, Matrix<BaseFloat>& feats, Matrix<BaseFloat>& ivectors, std::string& transcription, Lattice* plattice, double& likelihood);
 int ComputeMFCCFeatsFromFile(MfccOptions mfcc_opts, std::string wav_file_path, Matrix<BaseFloat>* pfeats);
 int ComputeMFCCFeatsFromWavData(MfccOptions mfcc_opts, WaveData wave_data, Matrix<BaseFloat>* pfeats);
+int ComputeMFCCFeatsFromWavform(MfccOptions mfcc_opts, SubVector<BaseFloat> waveform, BaseFloat samp_freq, bool subtract_mean, Matrix<BaseFloat>* pfeatures);
 int ComputeCMVNStats(Matrix<BaseFloat>& feats, Matrix<double>* pstats);
 int IVectorExtractorOnline2(Matrix<BaseFloat>& feats, OnlineIvectorExtractionConfig ivector_config, Matrix<BaseFloat>* pivectors);

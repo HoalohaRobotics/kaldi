@@ -34,7 +34,7 @@ namespace hoaloha
 {
     int Init(ModelAndDecoder* m, CHAR* model_path);
     int TranscribeFile(ModelAndDecoder* m, string wav_file_path, string& transcription, Lattice* lattice, double& likelihood);
-    int TranscribeWavData(ModelAndDecoder* m, WaveData& waveData, string& transcription, Lattice* lattice, double& likelihood);
+    int TranscribeWaveData(ModelAndDecoder* m, short* data, int samp_freq, int sample_count, bool subtract_mean, string& transcription, Lattice* lattice, double& likelihood);
     int TranscribeFeats(ModelAndDecoder* m, Matrix<BaseFloat>& feats, string& transcription, Lattice* lattice, double& likelihood);
     void Cleanup(ModelAndDecoder* m);
 
@@ -105,15 +105,24 @@ namespace hoaloha
         return ret;
     }
 
-    int TranscribeWavData(ModelAndDecoder* m, WaveData& waveData, string& transcription, Lattice* lattice, double& likelihood)
+    int TranscribeWaveData(ModelAndDecoder* m, short* data, int samp_freq, int sample_count, bool subtract_mean, string& transcription, Lattice* lattice, double& likelihood)
     {
         Timer timer;
         Matrix<BaseFloat> feats;
+        float* data_floats = (float*)malloc(sizeof(float) * sample_count);
 
-        if (ComputeMFCCFeatsFromWavData(m->mfcc_opts, waveData, &feats) != 0) {
+        for (int i = 0; i < sample_count; i++)
+        {
+            data_floats[i] = data[i];
+        }
+        SubVector<float> waveform(data_floats, sample_count);
+
+        if (ComputeMFCCFeatsFromWavform(m->mfcc_opts, waveform, samp_freq, subtract_mean, &feats) != 0) {
             std::cout << "Failed to compute MFCC Features.\n";
             return(-1);
         }
+
+        free(data_floats);
 
         int ret = TranscribeFeats(m, feats, transcription, lattice, likelihood);
         std::cout << "HOALOHA: transcribe time: " << timer.Elapsed() << "\n";

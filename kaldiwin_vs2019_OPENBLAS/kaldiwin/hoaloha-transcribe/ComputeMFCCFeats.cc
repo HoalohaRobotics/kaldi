@@ -5,6 +5,38 @@
 
 using namespace kaldi;
 
+int ComputeMFCCFeatsFromWavform(MfccOptions mfcc_opts, SubVector<BaseFloat> waveform, BaseFloat samp_freq, bool subtract_mean, Matrix<BaseFloat>* pfeatures) {
+    try {
+        BaseFloat vtln_warp = 1.0;
+        Mfcc mfcc(mfcc_opts);
+
+        BaseFloat vtln_warp_local;  // Work out VTLN warp factor.
+        vtln_warp_local = vtln_warp;
+
+        try {
+            mfcc.ComputeFeatures(waveform, samp_freq,
+                vtln_warp_local, pfeatures);
+        }
+        catch (...) {
+            KALDI_WARN << "Failed to compute features for utterance";
+        }
+
+        if (subtract_mean) {
+            Vector<BaseFloat> mean(pfeatures->NumCols());
+            mean.AddRowSumMat(1.0, *pfeatures);
+            mean.Scale(1.0 / pfeatures->NumRows());
+            for (int32 i = 0; i < pfeatures->NumRows(); i++)
+                pfeatures->Row(i).AddVec(-1.0, mean);
+        }
+    }
+
+    catch (const std::exception& e) {
+        std::cerr << e.what();
+        return -1;
+    }
+    return (0);
+}
+
 int ComputeMFCCFeatsFromWavData(MfccOptions mfcc_opts, WaveData wave_data, Matrix<BaseFloat>* pfeatures) {
     try {
         // Define defaults for global options.
@@ -45,20 +77,7 @@ int ComputeMFCCFeatsFromWavData(MfccOptions mfcc_opts, WaveData wave_data, Matri
 
         SubVector<BaseFloat> waveform(wave_data.Data(), this_chan);
 
-        try {
-            mfcc.ComputeFeatures(waveform, wave_data.SampFreq(),
-                vtln_warp_local, pfeatures);
-        }
-        catch (...) {
-            KALDI_WARN << "Failed to compute features for utterance";
-        }
-        if (subtract_mean) {
-            Vector<BaseFloat> mean(pfeatures->NumCols());
-            mean.AddRowSumMat(1.0, *pfeatures);
-            mean.Scale(1.0 / pfeatures->NumRows());
-            for (int32 i = 0; i < pfeatures->NumRows(); i++)
-                pfeatures->Row(i).AddVec(-1.0, mean);
-        }
+        ComputeMFCCFeatsFromWavform(mfcc_opts, waveform, wave_data.SampFreq(), subtract_mean, pfeatures);
     }
 
     catch (const std::exception& e) {

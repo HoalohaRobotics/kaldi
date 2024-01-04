@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NAudio.Wave;
 
 namespace hoaloha_transcribe_dotnet
 {
@@ -16,7 +17,7 @@ namespace hoaloha_transcribe_dotnet
         {
             IntPtr lattice;
             string transcription;
-            double likelihood = 0;
+            double likelihood;
             
             if(args.Length != 1)
             {
@@ -32,14 +33,33 @@ namespace hoaloha_transcribe_dotnet
                 while (true)
                 {
                     Console.Write("\nFile: ");
-                    string input = Console.ReadLine().Trim('"');
+                    var input = Console.ReadLine().Trim('"');
                     if (input == "q")
                         break;
 
-                    t.TranscribeFile(input, out transcription, out lattice, ref likelihood);
+                    transcription = "";
+                    likelihood = 0;
 
-                    Console.WriteLine(transcription);
-                    Console.WriteLine(likelihood);
+                    try 
+                    {
+                        using (WaveFileReader reader = new WaveFileReader(input))
+                        {
+                            var data = new byte[(reader.WaveFormat.BitsPerSample / (sizeof(byte) * 8)) * reader.SampleCount];
+                            reader.Read(data, 0, data.Length);
+
+                            IntPtr p = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * data.Length);
+                            Marshal.Copy(data, 0, p, data.Length);
+                            t.TranscribeWaveData(p, reader.WaveFormat.SampleRate, (int)reader.SampleCount, out transcription, out lattice, ref likelihood);
+                            Marshal.FreeHGlobal(p);
+
+                            Console.WriteLine(transcription);
+                            Console.WriteLine(likelihood);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.Write(e);
+                    }
                 }
             }
         }

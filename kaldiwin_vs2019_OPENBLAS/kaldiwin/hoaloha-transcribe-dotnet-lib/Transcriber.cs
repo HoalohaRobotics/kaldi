@@ -15,7 +15,10 @@ namespace hoaloha_transcribe_dotnet
         private static extern IntPtr Init(string model_path);
 
         [DllImport("hoaloha-transcribe-dll.dll", SetLastError = true)]
-        private static extern int Transcribe(IntPtr model, string wav_file_path, WriteDelegate transcription, IntPtr lattice, ref double likelihood);
+        private static extern int TranscribeFile(IntPtr model, string wav_file_path, WriteDelegate transcription, IntPtr lattice, ref double likelihood);
+
+        [DllImport("hoaloha-transcribe-dll.dll", SetLastError = true)]
+        private static extern int TranscribeWaveData(IntPtr model, IntPtr data, int samp_freq, int sample_count, bool subtract_mean, WriteDelegate transcription, IntPtr lattice, ref double likelihood);
 
         [DllImport("hoaloha-transcribe-dll.dll", SetLastError = true)]
         private static extern void Cleanup(IntPtr model);
@@ -32,12 +35,18 @@ namespace hoaloha_transcribe_dotnet
         {
             string t = "";
             lattice = new IntPtr();
-            likelihood = 0;
 
-            Transcribe(this.m_model, file_path, s => { t = s; }, lattice, ref likelihood);
+            TranscribeFile(this.m_model, file_path, s => { t = s; }, lattice, ref likelihood);
             transcription = t;
         }
+        public void TranscribeWaveData(IntPtr data, int sample_freq, int sample_count, out string transcription, out IntPtr lattice, ref double likelihood)
+        {
+            string t = "";
+            lattice = new IntPtr();
 
+            TranscribeWaveData(this.m_model, data, sample_freq, sample_count, false, s => { t = s; }, lattice, ref likelihood);
+            transcription = t;
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

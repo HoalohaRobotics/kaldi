@@ -1,9 +1,0 @@
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\kaldiwin\hoaloha-transcribe-dotnet-lib\bin\Debug\hoaloha-transcribe-dotnet-lib.dll
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\kaldiwin\hoaloha-transcribe-dotnet-lib\bin\Debug\hoaloha-transcribe-dotnet-lib.pdb
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\kaldiwin\hoaloha-transcribe-dotnet-lib\obj\Debug\hoaloha-transcribe-dotnet-lib.csproj.CoreCompileInputs.cache
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\kaldiwin\hoaloha-transcribe-dotnet-lib\obj\Debug\hoaloha-transcribe-dotnet-lib.dll
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\kaldiwin\hoaloha-transcribe-dotnet-lib\obj\Debug\hoaloha-transcribe-dotnet-lib.pdb
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\kaldiwin\x64\Debug\hoaloha-transcribe-dotnet-lib.dll
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\kaldiwin\x64\Debug\hoaloha-transcribe-dotnet-lib.pdb
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\x64\Debug\hoaloha-transcribe-dotnet-lib.dll
-C:\Users\Gersh\Git\kaldi_hoaloha\kaldiwin_vs2019_OPENBLAS\x64\Debug\hoaloha-transcribe-dotnet-lib.pdb
