@@ -41,14 +41,29 @@ int LoadModelAndDecoder(
 
     m->word_syms = fst::SymbolTable::ReadText(word_syms_filename);
 
+    m->lattice = NULL;
+
     return 0;
 }
 
 void UnloadModelAndDecoder(ModelAndDecoder* m)
 {
-    delete m->decoder;
-    delete m->decode_fst;
-    delete m->word_syms;
+    if (m->decoder != NULL)
+    {
+        delete m->decoder;
+    }
+    if (m->decode_fst != NULL)
+    {
+        delete m->decode_fst;
+    }
+    if (m->word_syms != NULL)
+    {
+        delete m->word_syms;
+    }
+    if (m->lattice != NULL)
+    {
+        delete m->lattice;
+    }
 }
 
 int NNet3LatgenFaster(
@@ -56,7 +71,6 @@ int NNet3LatgenFaster(
     Matrix<BaseFloat>& feats,
     Matrix<BaseFloat>& ivectors,
     std::string& transcription,
-    Lattice* plattice,
     double& likelihood)
 {
     try {
@@ -76,8 +90,15 @@ int NNet3LatgenFaster(
             feats, NULL, &ivectors, online_ivector_period);
 
         bool determinize = false;
-        Lattice lattice;
-        Decode(*m->decoder, nnet_decodable, m->trans_model, m->word_syms, m->decodable_opts.acoustic_scale, determinize, allow_partial, transcription, &lattice, likelihood);
+
+        if (m->lattice != NULL)
+        {
+            free(m->lattice);
+        }
+        m->lattice = new Lattice();
+
+        Decode(*m->decoder, nnet_decodable, m->trans_model, m->word_syms, m->decodable_opts.acoustic_scale, determinize, allow_partial, transcription, m->lattice, likelihood);
+
 
         kaldi::int64 input_frame_count =
             frame_count * m->decodable_opts.frame_subsampling_factor;

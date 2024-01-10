@@ -30,11 +30,12 @@ typedef struct ModelAndDecoder
     nnet3::NnetSimpleComputationOptions decodable_opts;
     nnet3::NnetSimpleComputationOptions nnet3_simple_computation_opts;
     LatticeFasterDecoderConfig decoder_config;
+    Lattice* lattice; //this if for storing the last output lattice
 };
 
 int LoadModelAndDecoder(ModelAndDecoder* m, string decoder_graph_filename, string model_filename, string word_syms_filename, nnet3::NnetSimpleComputationOptions decodable_opts, LatticeFasterDecoderConfig decoder_config);
 void UnloadModelAndDecoder(ModelAndDecoder* m);
-int NNet3LatgenFaster(ModelAndDecoder* m, Matrix<BaseFloat>& feats, Matrix<BaseFloat>& ivectors, std::string& transcription, Lattice* plattice, double& likelihood);
+int NNet3LatgenFaster(ModelAndDecoder* m, Matrix<BaseFloat>& feats, Matrix<BaseFloat>& ivectors, std::string& transcription, double& likelihood);
 int ComputeMFCCFeatsFromFile(MfccOptions mfcc_opts, std::string wav_file_path, Matrix<BaseFloat>* pfeats);
 int ComputeMFCCFeatsFromWavData(MfccOptions mfcc_opts, WaveData wave_data, Matrix<BaseFloat>* pfeats);
 int ComputeMFCCFeatsFromWavform(MfccOptions mfcc_opts, SubVector<BaseFloat> waveform, BaseFloat samp_freq, bool subtract_mean, Matrix<BaseFloat>* pfeatures);

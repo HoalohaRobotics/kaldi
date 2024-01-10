@@ -8,7 +8,6 @@ int main(int argc, char* argv[]) {
     hoaloha::Init(&m, argv[1]);
 
     string transcription;
-    Lattice lattice;
     double likelihood;
     string wav_file_path;
 
@@ -22,7 +21,7 @@ int main(int argc, char* argv[]) {
         {
             break;
         }
-        hoaloha::TranscribeFile(&m, wav_file_path, transcription, &lattice, likelihood);
+        hoaloha::TranscribeFile(&m, wav_file_path, transcription, likelihood);
         std::cout << transcription + '\n';
     }
 

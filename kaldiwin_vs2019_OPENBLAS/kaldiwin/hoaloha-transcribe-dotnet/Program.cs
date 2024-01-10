@@ -15,7 +15,6 @@ namespace hoaloha_transcribe_dotnet
         [STAThread]
         static void Main(string[] args)
         {
-            IntPtr lattice;
             string transcription;
             double likelihood;
             
@@ -47,10 +46,10 @@ namespace hoaloha_transcribe_dotnet
                             var data = new byte[(reader.WaveFormat.BitsPerSample / (sizeof(byte) * 8)) * reader.SampleCount];
                             reader.Read(data, 0, data.Length);
 
-                            IntPtr p = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * data.Length);
-                            Marshal.Copy(data, 0, p, data.Length);
-                            t.TranscribeWaveData(p, reader.WaveFormat.SampleRate, (int)reader.SampleCount, out transcription, out lattice, ref likelihood);
-                            Marshal.FreeHGlobal(p);
+                            IntPtr pData = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * data.Length);
+                            Marshal.Copy(data, 0, pData, data.Length);
+                            t.TranscribeWaveData(pData, reader.WaveFormat.SampleRate, (int)reader.SampleCount, out transcription, ref likelihood);
+                            Marshal.FreeHGlobal(pData);
 
                             Console.WriteLine(transcription);
                             Console.WriteLine(likelihood);
