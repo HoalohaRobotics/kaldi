@@ -11,16 +11,16 @@ namespace hoaloha_transcribe_dotnet
 
     public class Transcriber : IDisposable
     {
-        [DllImport("hoaloha-transcribe-dll.dll", SetLastError = true)]
+        [DllImport("Robot_Kaldi_Core.dll", SetLastError = true)]
         private static extern IntPtr Init(string model_path);
 
-        [DllImport("hoaloha-transcribe-dll.dll", SetLastError = true)]
+        [DllImport("Robot_Kaldi_Core.dll", SetLastError = true)]
         private static extern int TranscribeFile(IntPtr model, string wav_file_path, WriteDelegate transcription, ref double likelihood);
 
-        [DllImport("hoaloha-transcribe-dll.dll", SetLastError = true)]
+        [DllImport("Robot_Kaldi_Core.dll", SetLastError = true)]
         private static extern int TranscribeWaveData(IntPtr model, IntPtr data, int samp_freq, int sample_count, WriteDelegate transcription, ref double likelihood);
 
-        [DllImport("hoaloha-transcribe-dll.dll", SetLastError = true)]
+        [DllImport("Robot_Kaldi_Core.dll", SetLastError = true)]
         private static extern void Cleanup(IntPtr model);
 
         private IntPtr m_model;
